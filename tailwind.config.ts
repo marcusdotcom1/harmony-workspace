@@ -9,7 +9,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['"Cal Sans"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['"Space Grotesk"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -44,6 +44,7 @@ export default {
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-aurora': 'var(--gradient-aurora)',
+        'gradient-warm': 'var(--gradient-warm)',
         'gradient-mesh': 'var(--gradient-mesh)',
         'gradient-card': 'var(--gradient-card)',
       },
@@ -52,6 +53,7 @@ export default {
         'md-soft': 'var(--shadow-md)',
         'lg-soft': 'var(--shadow-lg)',
         'glow': 'var(--shadow-glow)',
+        'warm': 'var(--shadow-warm)',
         'card': 'var(--shadow-card)',
       },
       borderRadius: {
