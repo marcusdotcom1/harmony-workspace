@@ -51,21 +51,21 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Hero */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-3xl border border-border/60 bg-gradient-aurora p-6 md:p-8 text-white shadow-lg-soft"
+        className="relative overflow-hidden rounded-3xl glass-strong gradient-border p-6 md:p-8 shadow-glow"
       >
-        <div className="absolute -top-16 -right-16 h-56 w-56 rounded-full bg-white/15 blur-3xl" />
-        <div className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-accent/30 blur-3xl" />
+        <div className="absolute -top-24 -right-16 h-64 w-64 rounded-full bg-primary/30 blur-3xl animate-glow-pulse" />
+        <div className="absolute -bottom-24 -left-10 h-64 w-64 rounded-full bg-accent/25 blur-3xl animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs bg-white/20 backdrop-blur px-2.5 py-1 rounded-full mb-3">
-              <Sparkles className="h-3 w-3" /> {format(new Date(), "EEEE, MMMM d")}
+            <div className="inline-flex items-center gap-1.5 text-xs glass-pill px-3 py-1 rounded-full mb-3 text-muted-foreground">
+              <Sparkles className="h-3 w-3 text-accent" /> {format(new Date(), "EEEE, MMMM d")}
             </div>
-            <h1 className="font-display text-3xl md:text-4xl font-bold">Welcome back, {currentUser?.name.split(" ")[0]} 👋</h1>
-            <p className="text-white/85 mt-1.5 max-w-lg">Here's a snapshot of what's happening across your workspace today.</p>
+            <h1 className="font-display text-3xl md:text-4xl font-bold gradient-text">Welcome back, {currentUser?.name.split(" ")[0]}</h1>
+            <p className="text-muted-foreground mt-2 max-w-lg">Here's a snapshot of what's happening across your workspace today.</p>
           </div>
           <div className="flex items-center gap-3">
             {currentUser?.role === "admin" && (
-              <Button onClick={() => setOpen(true)} className="bg-white text-primary hover:bg-white/90 border-0 rounded-xl shadow-lg">
+              <Button onClick={() => setOpen(true)} className="bg-white text-black hover:bg-white/90 border-0 rounded-full px-5 h-11 font-medium">
                 <Plus className="h-4 w-4 mr-1" /> New project
               </Button>
             )}
