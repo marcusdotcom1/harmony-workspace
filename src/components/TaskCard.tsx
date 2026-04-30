@@ -21,9 +21,9 @@ export function TaskCard({
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
-      draggable={draggable} onDragStart={onDragStart}
       onClick={onClick}
       className="group cursor-pointer rounded-xl border border-border/60 bg-card p-3.5 shadow-sm-soft hover:shadow-md-soft hover:border-primary/30 transition-all"
+      {...({ draggable, onDragStart } as any)}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <h4 className="text-sm font-medium leading-snug line-clamp-2">{task.title}</h4>
