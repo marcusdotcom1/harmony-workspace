@@ -21,12 +21,12 @@ export function StatCard({
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06, duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
       whileHover={{ y: -3 }}
-      className="group relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 shadow-card hover:shadow-lg-soft transition-shadow"
+      className="group relative overflow-hidden rounded-2xl glass p-5 glow-hover"
     >
-      <div className={cn("absolute -right-8 -top-8 h-28 w-28 rounded-full opacity-10 blur-2xl bg-gradient-to-br", accents[accent])} />
+      <div className={cn("absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-25 blur-2xl bg-gradient-to-br", accents[accent])} />
       <div className="relative flex items-start justify-between">
         <div>
-          <div className="text-sm text-muted-foreground font-medium">{label}</div>
+          <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{label}</div>
           <div className="mt-2 text-3xl font-display font-bold tracking-tight">{value}</div>
           {delta && (
             <div className={cn("mt-2 inline-flex items-center gap-1 text-xs font-medium", delta.positive ? "text-success" : "text-destructive")}>

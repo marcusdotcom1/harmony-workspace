@@ -25,7 +25,7 @@ export function ProjectCard({ project, members, tasks, index = 0 }: {
       className="group"
     >
       <Link to={`/projects/${project.id}`}>
-        <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card p-5 shadow-card hover:shadow-lg-soft transition-all duration-300">
+        <div className="relative overflow-hidden rounded-2xl glass p-5 glow-hover transition-all duration-300">
           <div className={`absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-15 blur-2xl bg-gradient-to-br ${project.color}`} />
           <div className="relative">
             <div className="flex items-start justify-between mb-3">

@@ -22,7 +22,7 @@ export function TaskCard({
       whileHover={{ y: -2 }}
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="group cursor-pointer rounded-xl border border-border/60 bg-card p-3.5 shadow-sm-soft hover:shadow-md-soft hover:border-primary/30 transition-all"
+      className="group cursor-pointer rounded-xl glass p-3.5 hover:border-primary/40 hover:shadow-glow transition-all"
       {...({ draggable, onDragStart } as any)}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
