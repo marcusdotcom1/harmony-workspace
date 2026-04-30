@@ -39,18 +39,18 @@ export function Sidebar({ collapsed, setCollapsed, mobile, onClose }: {
       {/* Brand */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
         <NavLink to="/dashboard" className="flex items-center gap-2.5 min-w-0" onClick={onClose}>
-          <div className="h-9 w-9 rounded-xl bg-gradient-aurora flex items-center justify-center shadow-glow shrink-0">
+          <div className="h-9 w-9 rounded-full bg-gradient-aurora flex items-center justify-center shadow-glow shrink-0">
             <Sparkles className="h-4 w-4 text-white" />
           </div>
           {(!collapsed || mobile) && (
             <div className="min-w-0">
-              <div className="font-display font-bold text-base leading-none">Plane</div>
-              <div className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider">Workspace</div>
+              <div className="font-display font-bold text-base leading-none tracking-tight">ORBIT</div>
+              <div className="text-[10px] text-muted-foreground mt-1 uppercase tracking-[0.18em]">Workspace</div>
             </div>
           )}
         </NavLink>
         {!mobile && (
-          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => setCollapsed(!collapsed)}>
+          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/5" onClick={() => setCollapsed(!collapsed)}>
             <ChevronLeft className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")} />
           </Button>
         )}
@@ -95,7 +95,7 @@ export function Sidebar({ collapsed, setCollapsed, mobile, onClose }: {
             <div className="relative">
               <div className="text-sm font-semibold mb-1">Upgrade to Pro</div>
               <p className="text-xs text-white/85 mb-3">Unlimited projects, advanced reports & priority support.</p>
-              <Button size="sm" variant="secondary" className="h-7 text-xs bg-white text-primary hover:bg-white/90 border-0">
+              <Button size="sm" className="h-7 text-xs bg-white text-black hover:bg-white/90 border-0 rounded-full px-3">
                 Upgrade
               </Button>
             </div>

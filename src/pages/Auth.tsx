@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, Github, Mail, Loader2, CheckCircle2 } from "lucide-react";
+import { Sparkles, Github, Mail, Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,25 +18,40 @@ const schema = z.object({
 
 function AuthShell({ children, side }: { children: ReactNode; side: ReactNode }) {
   return (
-    <div className="min-h-screen w-full flex bg-background">
-      <div className="flex-1 flex items-center justify-center p-6 md:p-10">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="w-full max-w-md">
-          {children}
+    <div className="min-h-screen w-full flex bg-background relative overflow-hidden">
+      {/* Ambient glow */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 mesh-bg" />
+        <div className="absolute inset-0 circuit-bg opacity-40" />
+        <div className="absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-primary/30 blur-[140px] animate-glow-pulse" />
+        <div className="absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-accent/30 blur-[140px] animate-glow-pulse" style={{ animationDelay: "2s" }} />
+      </div>
+
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 relative">
+        <Link to="/" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-3.5 w-3.5" /> Back to home
+        </Link>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="w-full max-w-md">
+          <div className="glass-strong rounded-3xl p-8 md:p-10 gradient-border shadow-glow">
+            {children}
+          </div>
         </motion.div>
       </div>
-      <div className="hidden lg:flex flex-1 relative overflow-hidden bg-gradient-aurora">
-        <div className="absolute inset-0 mesh-bg opacity-50" />
-        <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-white/20 blur-3xl animate-float" />
-        <div className="absolute bottom-10 left-10 h-60 w-60 rounded-full bg-accent/40 blur-3xl animate-float" />
+
+      <div className="hidden lg:flex flex-1 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-aurora opacity-30 animate-aurora" />
+        <div className="absolute inset-0 circuit-bg opacity-30" />
+        <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-white/15 blur-3xl animate-float-slow" />
+        <div className="absolute bottom-10 left-10 h-60 w-60 rounded-full bg-accent/40 blur-3xl animate-float-slow" style={{ animationDelay: "1.5s" }} />
         <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-          <div className="flex items-center gap-2.5">
-            <div className="h-10 w-10 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
+          <Link to="/" className="flex items-center gap-2.5 w-fit">
+            <div className="h-10 w-10 rounded-full bg-white/15 backdrop-blur-xl border border-white/10 flex items-center justify-center">
               <Sparkles className="h-5 w-5" />
             </div>
-            <span className="font-display font-bold text-xl">Plane</span>
-          </div>
+            <span className="font-display font-bold text-xl tracking-tight">ORBIT</span>
+          </Link>
           {side}
-          <div className="text-xs text-white/70">© 2026 Plane Labs · Crafted for productive teams</div>
+          <div className="text-xs text-white/60">© 2026 Orbit Labs · Crafted for productive teams</div>
         </div>
       </div>
     </div>
@@ -46,7 +61,7 @@ function AuthShell({ children, side }: { children: ReactNode; side: ReactNode })
 export function Login() {
   const navigate = useNavigate();
   const { login } = useApp();
-  const [email, setEmail] = useState("alex@plane.app");
+  const [email, setEmail] = useState("alex@orbit.app");
   const [password, setPassword] = useState("demo1234");
   const [role, setRole] = useState<Role>("admin");
   const [loading, setLoading] = useState(false);
@@ -76,7 +91,7 @@ export function Login() {
         <div className="space-y-6 max-w-md">
           <div>
             <h2 className="font-display text-4xl font-bold leading-tight mb-3">Where teams ship faster, together.</h2>
-            <p className="text-white/80">Plane brings projects, tasks, and conversations into one elegant home.</p>
+            <p className="text-white/80">Orbit brings projects, tasks, and conversations into one elegant home.</p>
           </div>
           <ul className="space-y-2.5">
             {["Beautiful kanban boards", "Real-time team collaboration", "Smart deadlines & priorities", "Insightful analytics"].map((f) => (
@@ -88,38 +103,38 @@ export function Login() {
         </div>
       }
     >
-      <div className="mb-8 lg:hidden flex items-center gap-2">
-        <div className="h-10 w-10 rounded-xl bg-gradient-aurora flex items-center justify-center text-white shadow-glow">
+      <div className="mb-7 lg:hidden flex items-center gap-2">
+        <div className="h-10 w-10 rounded-full bg-gradient-aurora flex items-center justify-center text-white shadow-glow">
           <Sparkles className="h-5 w-5" />
         </div>
-        <span className="font-display font-bold text-xl">Plane</span>
+        <span className="font-display font-bold text-xl tracking-tight">ORBIT</span>
       </div>
-      <h1 className="font-display text-3xl font-bold mb-2">Welcome back</h1>
-      <p className="text-muted-foreground mb-8">Sign in to continue to your workspace.</p>
+      <h1 className="font-display text-3xl font-bold mb-2 gradient-text">Welcome back</h1>
+      <p className="text-muted-foreground mb-7 text-sm">Sign in to continue to your workspace.</p>
 
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <Button variant="outline" className="rounded-xl h-11" onClick={() => { login("alex@plane.app", "admin"); navigate("/dashboard"); }}>
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <Button variant="outline" className="rounded-full h-11 bg-white/5 border-white/10 hover:bg-white/10" onClick={() => { login("alex@orbit.app", "admin"); navigate("/dashboard"); }}>
           <Github className="h-4 w-4 mr-2" /> GitHub
         </Button>
-        <Button variant="outline" className="rounded-xl h-11" onClick={() => { login("alex@plane.app", "admin"); navigate("/dashboard"); }}>
+        <Button variant="outline" className="rounded-full h-11 bg-white/5 border-white/10 hover:bg-white/10" onClick={() => { login("alex@orbit.app", "admin"); navigate("/dashboard"); }}>
           <Mail className="h-4 w-4 mr-2" /> Google
         </Button>
       </div>
 
-      <div className="relative my-6 text-center text-xs text-muted-foreground">
-        <span className="bg-background relative z-10 px-3">or sign in with email</span>
-        <div className="absolute inset-x-0 top-1/2 h-px bg-border" />
+      <div className="relative my-5 text-center text-xs text-muted-foreground">
+        <span className="relative z-10 px-3 bg-card/50">or with email</span>
+        <div className="absolute inset-x-0 top-1/2 h-px bg-white/10" />
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-11 rounded-xl" />
+          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-11 rounded-full bg-white/5 border-white/10 px-5" />
           {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-11 rounded-xl" />
+          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="h-11 rounded-full bg-white/5 border-white/10 px-5" />
           {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
         </div>
         <div className="space-y-1.5">
@@ -127,19 +142,19 @@ export function Login() {
           <div className="grid grid-cols-2 gap-2">
             {(["admin", "member"] as const).map((r) => (
               <button key={r} type="button" onClick={() => setRole(r)}
-                className={`h-10 rounded-xl border text-sm font-medium capitalize transition-all ${role === r ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"}`}>
+                className={`h-10 rounded-full border text-sm font-medium capitalize transition-all ${role === r ? "border-primary/60 bg-primary/15 text-foreground shadow-glow" : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10"}`}>
                 {r}
               </button>
             ))}
           </div>
         </div>
-        <Button type="submit" disabled={loading} className="w-full h-11 rounded-xl bg-gradient-aurora hover:opacity-90 text-white border-0 shadow-glow">
+        <Button type="submit" disabled={loading} className="w-full h-11 rounded-full bg-white text-black hover:bg-white/90 font-medium">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign in"}
         </Button>
       </form>
 
       <p className="text-sm text-muted-foreground mt-6 text-center">
-        New to Plane? <Link to="/signup" className="text-primary font-medium hover:underline">Create an account</Link>
+        New to Orbit? <Link to="/signup" className="text-foreground font-medium hover:underline">Create an account</Link>
       </p>
     </AuthShell>
   );
@@ -182,29 +197,29 @@ export function Signup() {
         </div>
       }
     >
-      <div className="mb-8 lg:hidden flex items-center gap-2">
-        <div className="h-10 w-10 rounded-xl bg-gradient-aurora flex items-center justify-center text-white shadow-glow">
+      <div className="mb-7 lg:hidden flex items-center gap-2">
+        <div className="h-10 w-10 rounded-full bg-gradient-aurora flex items-center justify-center text-white shadow-glow">
           <Sparkles className="h-5 w-5" />
         </div>
-        <span className="font-display font-bold text-xl">Plane</span>
+        <span className="font-display font-bold text-xl tracking-tight">ORBIT</span>
       </div>
-      <h1 className="font-display text-3xl font-bold mb-2">Create your workspace</h1>
-      <p className="text-muted-foreground mb-8">Free for up to 5 teammates. Upgrade anytime.</p>
+      <h1 className="font-display text-3xl font-bold mb-2 gradient-text">Create your workspace</h1>
+      <p className="text-muted-foreground mb-7 text-sm">Free for up to 5 teammates. Upgrade anytime.</p>
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-1.5">
           <Label htmlFor="name">Full name</Label>
-          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" className="h-11 rounded-xl" />
+          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Jane Doe" className="h-11 rounded-full bg-white/5 border-white/10 px-5" />
           {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="email">Work email</Label>
-          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className="h-11 rounded-xl" />
+          <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className="h-11 rounded-full bg-white/5 border-white/10 px-5" />
           {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" className="h-11 rounded-xl" />
+          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" className="h-11 rounded-full bg-white/5 border-white/10 px-5" />
           {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
         </div>
         <div className="space-y-1.5">
@@ -212,19 +227,19 @@ export function Signup() {
           <div className="grid grid-cols-2 gap-2">
             {(["admin", "member"] as const).map((r) => (
               <button key={r} type="button" onClick={() => setRole(r)}
-                className={`h-10 rounded-xl border text-sm font-medium capitalize transition-all ${role === r ? "border-primary bg-primary/10 text-primary" : "border-border hover:bg-muted"}`}>
+                className={`h-10 rounded-full border text-sm font-medium capitalize transition-all ${role === r ? "border-primary/60 bg-primary/15 text-foreground shadow-glow" : "border-white/10 bg-white/5 text-muted-foreground hover:bg-white/10"}`}>
                 {r}
               </button>
             ))}
           </div>
         </div>
-        <Button type="submit" disabled={loading} className="w-full h-11 rounded-xl bg-gradient-aurora hover:opacity-90 text-white border-0 shadow-glow">
+        <Button type="submit" disabled={loading} className="w-full h-11 rounded-full bg-white text-black hover:bg-white/90 font-medium">
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create account"}
         </Button>
       </form>
 
       <p className="text-sm text-muted-foreground mt-6 text-center">
-        Already have an account? <Link to="/login" className="text-primary font-medium hover:underline">Sign in</Link>
+        Already have an account? <Link to="/login" className="text-foreground font-medium hover:underline">Sign in</Link>
       </p>
     </AuthShell>
   );

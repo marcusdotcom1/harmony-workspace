@@ -16,7 +16,11 @@ export function AppLayout() {
   if (!currentUser) return <Navigate to="/login" replace />;
 
   return (
-    <div className="min-h-screen flex w-full bg-background mesh-bg">
+    <div className="min-h-screen flex w-full bg-background relative">
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute inset-0 mesh-bg opacity-70" />
+        <div className="absolute inset-0 circuit-bg opacity-30" />
+      </div>
       {/* Desktop sidebar */}
       <div className="hidden lg:block">
         <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
