@@ -175,7 +175,7 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
           <span className="gradient-text">Manage Projects, Teams,</span>
           <br />
           <RevealWords text="and Tasks in One Workspace" gradient />
-        </h1>
+        </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
