@@ -18,6 +18,15 @@ const colors = [
   { v: "from-indigo-500 to-purple-500", emoji: "📣" },
 ];
 
+const orbitColors = colors.map((_, index) => [
+  { v: "from-teal-300 to-cyan-300", emoji: "O" },
+  { v: "from-emerald-300 to-teal-300", emoji: "A" },
+  { v: "from-cyan-300 to-blue-300", emoji: "D" },
+  { v: "from-green-300 to-emerald-400", emoji: "S" },
+  { v: "from-sky-300 to-teal-300", emoji: "P" },
+  { v: "from-lime-300 to-cyan-300", emoji: "N" },
+][index]);
+
 export function ProjectModal({ open, onOpenChange }: { open: boolean; onOpenChange: (b: boolean) => void }) {
   const { createProject, currentUser, users } = useApp();
   const [name, setName] = useState("");
@@ -35,7 +44,7 @@ export function ProjectModal({ open, onOpenChange }: { open: boolean; onOpenChan
       dueDate: dueDate ? new Date(dueDate).toISOString() : new Date(Date.now() + 30 * 86400000).toISOString(),
       memberIds: [currentUser!.id, ...users.slice(0, 2).map((u) => u.id)].filter((v, i, a) => a.indexOf(v) === i),
       ownerId: currentUser!.id,
-      color: colors[pick].v, emoji: colors[pick].emoji,
+      color: orbitColors[pick].v, emoji: orbitColors[pick].emoji,
     });
     toast.success("Project created");
     onOpenChange(false);
@@ -88,10 +97,11 @@ export function ProjectModal({ open, onOpenChange }: { open: boolean; onOpenChan
           <div className="space-y-2">
             <Label>Cover</Label>
             <div className="flex gap-2 flex-wrap">
-              {colors.map((c, i) => (
+              {orbitColors.map((c, i) => (
                 <button key={i} onClick={() => setPick(i)}
-                  className={`h-12 w-12 rounded-xl bg-gradient-to-br ${c.v} flex items-center justify-center text-xl transition-all ${pick === i ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105" : "hover:scale-105"}`}>
-                  {c.emoji}
+                  className={`relative h-12 w-12 rounded-xl bg-gradient-to-br ${c.v} flex items-center justify-center text-xl shadow-sm transition-all ${pick === i ? "ring-2 ring-primary ring-offset-2 ring-offset-background scale-105" : "hover:scale-105"}`}>
+                  <span className="absolute inset-[3px] rounded-[0.65rem] border border-white/25 bg-black/15" />
+                  <span className="relative">{c.emoji}</span>
                 </button>
               ))}
             </div>
@@ -99,7 +109,7 @@ export function ProjectModal({ open, onOpenChange }: { open: boolean; onOpenChan
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-          <Button onClick={onSave} className="bg-gradient-aurora text-white border-0 hover:opacity-90">Create project</Button>
+          <Button onClick={onSave} className="bg-primary text-black border-0 hover:bg-primary/90 shadow-none">Create project</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

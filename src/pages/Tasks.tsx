@@ -49,7 +49,7 @@ export default function Tasks() {
             ))}
           </div>
           {isAdmin && projects[0] && (
-            <Button onClick={() => { setEditing(null); setOpen(true); }} className="bg-gradient-aurora text-white border-0 hover:opacity-90 rounded-xl">
+            <Button onClick={() => { setEditing(null); setOpen(true); }} className="bg-primary text-black border-0 hover:bg-primary/90 rounded-xl shadow-sm">
               <Plus className="h-4 w-4 mr-1" /> Task
             </Button>
           )}

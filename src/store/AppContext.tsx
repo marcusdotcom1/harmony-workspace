@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from "react";
 import { Activity, Comment, Notification, Project, Task, User } from "@/types";
-import { mockActivities, mockNotifications, mockProjects, mockTasks, mockUsers } from "@/data/mockData";
+import { apiRequest } from "@/lib/api";
 
 interface AppState {
   currentUser: User | null;
@@ -11,50 +11,64 @@ interface AppState {
   activities: Activity[];
   notifications: Notification[];
   theme: "light" | "dark";
-  // auth
-  login: (email: string, role?: User["role"]) => void;
-  signup: (name: string, email: string, role: User["role"]) => void;
+  loading: boolean;
+  login: (email: string, password: string, role?: User["role"]) => Promise<void>;
+  signup: (name: string, email: string, password: string, role: User["role"]) => Promise<void>;
   logout: () => void;
-  // projects
-  createProject: (p: Omit<Project, "id" | "createdAt">) => void;
-  updateProject: (id: string, p: Partial<Project>) => void;
-  deleteProject: (id: string) => void;
-  // tasks
-  createTask: (t: Omit<Task, "id" | "createdAt">) => void;
-  updateTask: (id: string, t: Partial<Task>) => void;
-  deleteTask: (id: string) => void;
-  // comments
-  addComment: (taskId: string, text: string) => void;
-  // team
-  inviteMember: (name: string, email: string, role: User["role"]) => void;
-  removeMember: (id: string) => void;
-  updateMemberRole: (id: string, role: User["role"]) => void;
-  // notifications
-  markNotificationRead: (id: string) => void;
-  markAllNotificationsRead: () => void;
-  // theme
+  createProject: (p: Omit<Project, "id" | "createdAt">) => Promise<void>;
+  updateProject: (id: string, p: Partial<Project>) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  createTask: (t: Omit<Task, "id" | "createdAt">) => Promise<void>;
+  updateTask: (id: string, t: Partial<Task>) => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
+  addComment: (taskId: string, text: string) => Promise<void>;
+  inviteMember: (name: string, email: string, role: User["role"]) => Promise<void>;
+  removeMember: (id: string) => Promise<void>;
+  updateMemberRole: (id: string, role: User["role"]) => Promise<void>;
+  markNotificationRead: (id: string) => Promise<void>;
+  markAllNotificationsRead: () => Promise<void>;
   toggleTheme: () => void;
 }
 
+type WorkspaceResponse = {
+  users: User[];
+  projects: Project[];
+  tasks: Task[];
+  comments: Comment[];
+  activities: Activity[];
+  notifications: Notification[];
+};
+
+type AuthResponse = { user: User };
+
 const AppContext = createContext<AppState | null>(null);
 
-const colors = [
-  "from-violet-500 to-fuchsia-500", "from-sky-500 to-cyan-400", "from-emerald-500 to-teal-400",
-  "from-orange-500 to-amber-400", "from-pink-500 to-rose-400", "from-indigo-500 to-blue-400",
-];
-
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<User | null>(() => {
-    const saved = localStorage.getItem("plane:user");
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [users, setUsers] = useState<User[]>(mockUsers);
-  const [projects, setProjects] = useState<Project[]>(mockProjects);
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [activities, setActivities] = useState<Activity[]>(mockActivities);
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    return (localStorage.getItem("orbit:theme") as "light" | "dark" | null) || "dark";
+  });
+
+  const applyWorkspace = useCallback((workspace: WorkspaceResponse) => {
+    setUsers(workspace.users);
+    setProjects(workspace.projects);
+    setTasks(workspace.tasks);
+    setComments(workspace.comments);
+    setActivities(workspace.activities);
+    setNotifications(workspace.notifications);
+  }, []);
+
+  const refreshWorkspace = useCallback(async () => {
+    const workspace = await apiRequest<WorkspaceResponse>("/workspace");
+    applyWorkspace(workspace);
+  }, [applyWorkspace]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
@@ -62,97 +76,160 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [theme]);
 
   useEffect(() => {
-    if (currentUser) localStorage.setItem("plane:user", JSON.stringify(currentUser));
-    else localStorage.removeItem("plane:user");
-  }, [currentUser]);
+    let cancelled = false;
+    async function bootstrap() {
+      try {
+        const [{ user }, workspace] = await Promise.all([
+          apiRequest<{ user: User }>("/auth/me"),
+          apiRequest<WorkspaceResponse>("/workspace"),
+        ]);
+        if (cancelled) return;
+        setCurrentUser(user);
+        applyWorkspace(workspace);
+      } catch {
+        if (!cancelled) {
+          setCurrentUser(null);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
 
-  const pushActivity = useCallback((action: string, target: string, projectId?: string) => {
-    setActivities((prev) => [{
-      id: `a${Date.now()}`, userId: currentUser?.id || "u1", action, target, projectId,
-      createdAt: new Date().toISOString(),
-    }, ...prev]);
-  }, [currentUser]);
-
-  const login: AppState["login"] = (email, role = "admin") => {
-    const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (found) { setCurrentUser(found); return; }
-    const u: User = {
-      id: `u${Date.now()}`, name: email.split("@")[0], email, role,
-      color: colors[Math.floor(Math.random() * colors.length)],
+    bootstrap();
+    return () => {
+      cancelled = true;
     };
-    setUsers((prev) => [...prev, u]);
-    setCurrentUser(u);
+  }, [applyWorkspace]);
+
+  const login: AppState["login"] = async (email, password) => {
+    const { user } = await apiRequest<AuthResponse>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    setCurrentUser(user);
+    await refreshWorkspace();
   };
 
-  const signup: AppState["signup"] = (name, email, role) => {
-    const u: User = {
-      id: `u${Date.now()}`, name, email, role,
-      color: colors[Math.floor(Math.random() * colors.length)],
-    };
-    setUsers((prev) => [...prev, u]);
-    setCurrentUser(u);
+  const signup: AppState["signup"] = async (name, email, password, role) => {
+    const { user } = await apiRequest<AuthResponse>("/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password, role }),
+    });
+    setCurrentUser(user);
+    await refreshWorkspace();
   };
 
-  const logout = () => setCurrentUser(null);
-
-  const createProject: AppState["createProject"] = (p) => {
-    const np: Project = { ...p, id: `p${Date.now()}`, createdAt: new Date().toISOString() };
-    setProjects((prev) => [np, ...prev]);
-    pushActivity("created project", np.name, np.id);
+  const logout = () => {
+    apiRequest<void>("/auth/logout", { method: "POST" }).catch(() => undefined);
+    setCurrentUser(null);
+    setUsers([]);
+    setProjects([]);
+    setTasks([]);
+    setComments([]);
+    setActivities([]);
+    setNotifications([]);
   };
-  const updateProject: AppState["updateProject"] = (id, p) =>
-    setProjects((prev) => prev.map((x) => (x.id === id ? { ...x, ...p } : x)));
-  const deleteProject: AppState["deleteProject"] = (id) => {
+
+  const createProject: AppState["createProject"] = async (p) => {
+    const { project } = await apiRequest<{ project: Project }>("/projects", {
+      method: "POST",
+      body: JSON.stringify(p),
+    });
+    setProjects((prev) => [project, ...prev]);
+    await refreshWorkspace();
+  };
+
+  const updateProject: AppState["updateProject"] = async (id, p) => {
+    const { project } = await apiRequest<{ project: Project }>(`/projects/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(p),
+    });
+    setProjects((prev) => prev.map((x) => (x.id === id ? project : x)));
+  };
+
+  const deleteProject: AppState["deleteProject"] = async (id) => {
+    await apiRequest<void>(`/projects/${id}`, { method: "DELETE" });
     setProjects((prev) => prev.filter((x) => x.id !== id));
     setTasks((prev) => prev.filter((t) => t.projectId !== id));
   };
 
-  const createTask: AppState["createTask"] = (t) => {
-    const nt: Task = { ...t, id: `t${Date.now()}`, createdAt: new Date().toISOString() };
-    setTasks((prev) => [nt, ...prev]);
-    pushActivity("created task", nt.title, nt.projectId);
+  const createTask: AppState["createTask"] = async (t) => {
+    const { task } = await apiRequest<{ task: Task }>("/tasks", {
+      method: "POST",
+      body: JSON.stringify(t),
+    });
+    setTasks((prev) => [task, ...prev]);
+    await refreshWorkspace();
   };
-  const updateTask: AppState["updateTask"] = (id, t) => {
-    setTasks((prev) => prev.map((x) => (x.id === id ? { ...x, ...t } : x)));
-    if (t.status) {
-      const task = tasks.find((x) => x.id === id);
-      if (task) pushActivity(`moved to ${t.status.replace("_", " ")}`, task.title, task.projectId);
-    }
+
+  const updateTask: AppState["updateTask"] = async (id, t) => {
+    const { task } = await apiRequest<{ task: Task }>(`/tasks/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(t),
+    });
+    setTasks((prev) => prev.map((x) => (x.id === id ? task : x)));
+    await refreshWorkspace();
   };
-  const deleteTask: AppState["deleteTask"] = (id) =>
+
+  const deleteTask: AppState["deleteTask"] = async (id) => {
+    await apiRequest<void>(`/tasks/${id}`, { method: "DELETE" });
     setTasks((prev) => prev.filter((x) => x.id !== id));
-
-  const addComment: AppState["addComment"] = (taskId, text) => {
-    if (!currentUser) return;
-    setComments((prev) => [...prev, {
-      id: `c${Date.now()}`, taskId, authorId: currentUser.id, text, createdAt: new Date().toISOString(),
-    }]);
+    setComments((prev) => prev.filter((c) => c.taskId !== id));
   };
 
-  const inviteMember: AppState["inviteMember"] = (name, email, role) => {
-    setUsers((prev) => [...prev, {
-      id: `u${Date.now()}`, name, email, role, color: colors[Math.floor(Math.random() * colors.length)],
-    }]);
+  const addComment: AppState["addComment"] = async (taskId, text) => {
+    const { comment } = await apiRequest<{ comment: Comment }>(`/tasks/${taskId}/comments`, {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+    setComments((prev) => [...prev, comment]);
+    await refreshWorkspace();
   };
-  const removeMember: AppState["removeMember"] = (id) =>
+
+  const inviteMember: AppState["inviteMember"] = async (name, email, role) => {
+    const { user } = await apiRequest<{ user: User }>("/team/invite", {
+      method: "POST",
+      body: JSON.stringify({ name, email, role }),
+    });
+    setUsers((prev) => [...prev, user]);
+  };
+
+  const removeMember: AppState["removeMember"] = async (id) => {
+    await apiRequest<void>(`/team/${id}`, { method: "DELETE" });
     setUsers((prev) => prev.filter((u) => u.id !== id));
-  const updateMemberRole: AppState["updateMemberRole"] = (id, role) =>
-    setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role } : u)));
+  };
 
-  const markNotificationRead: AppState["markNotificationRead"] = (id) =>
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
-  const markAllNotificationsRead = () =>
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const updateMemberRole: AppState["updateMemberRole"] = async (id, role) => {
+    const { user } = await apiRequest<{ user: User }>(`/team/${id}/role`, {
+      method: "PATCH",
+      body: JSON.stringify({ role }),
+    });
+    setUsers((prev) => prev.map((u) => (u.id === id ? user : u)));
+  };
+
+  const markNotificationRead: AppState["markNotificationRead"] = async (id) => {
+    const { notification } = await apiRequest<{ notification: Notification }>(`/notifications/${id}/read`, {
+      method: "PATCH",
+    });
+    setNotifications((prev) => prev.map((n) => (n.id === id ? notification : n)));
+  };
+
+  const markAllNotificationsRead = async () => {
+    const { notifications: next } = await apiRequest<{ notifications: Notification[] }>("/notifications/read-all", {
+      method: "PATCH",
+    });
+    setNotifications(next);
+  };
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
   const value = useMemo<AppState>(() => ({
-    currentUser, users, projects, tasks, comments, activities, notifications, theme,
+    currentUser, users, projects, tasks, comments, activities, notifications, theme, loading,
     login, signup, logout, createProject, updateProject, deleteProject,
     createTask, updateTask, deleteTask, addComment,
     inviteMember, removeMember, updateMemberRole,
     markNotificationRead, markAllNotificationsRead, toggleTheme,
-  }), [currentUser, users, projects, tasks, comments, activities, notifications, theme]);
+  }), [currentUser, users, projects, tasks, comments, activities, notifications, theme, loading]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

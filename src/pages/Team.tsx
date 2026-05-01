@@ -39,7 +39,7 @@ export default function Team() {
           <p className="text-muted-foreground mt-1">{users.length} members in your workspace</p>
         </div>
         {isAdmin && (
-          <Button onClick={() => setOpen(true)} className="bg-gradient-aurora text-white border-0 hover:opacity-90 rounded-xl shadow-glow">
+          <Button onClick={() => setOpen(true)} className="bg-primary text-black border-0 hover:bg-primary/90 rounded-xl shadow-sm">
             <UserPlus className="h-4 w-4 mr-1" /> Invite member
           </Button>
         )}
@@ -121,7 +121,7 @@ export default function Team() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={onInvite} className="bg-gradient-aurora text-white border-0 hover:opacity-90"><Plus className="h-4 w-4 mr-1" /> Send invite</Button>
+            <Button onClick={onInvite} className="bg-primary text-black border-0 hover:bg-primary/90 shadow-none"><Plus className="h-4 w-4 mr-1" /> Send invite</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -8,11 +8,12 @@ import { useApp } from "@/store/AppContext";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 export function AppLayout() {
-  const { currentUser } = useApp();
+  const { currentUser, loading } = useApp();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
 
+  if (loading) return <div className="min-h-screen bg-background" />;
   if (!currentUser) return <Navigate to="/login" replace />;
 
   return (

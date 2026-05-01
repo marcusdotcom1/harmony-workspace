@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BrandMark } from "@/components/BrandMark";
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -29,11 +30,9 @@ export default function Index() {
     <div className="min-h-screen relative overflow-x-hidden bg-background text-foreground">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 mesh-bg opacity-90" />
-        <div className="absolute inset-0 circuit-bg opacity-40" />
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 h-[680px] w-[1100px] rounded-full bg-primary/30 blur-[140px] animate-glow-pulse" />
-        <div className="absolute top-[20%] right-[-10%] h-[420px] w-[420px] rounded-full bg-accent/30 blur-[120px] animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
-        <div className="absolute top-[60%] left-[-10%] h-[420px] w-[420px] rounded-full bg-fuchsia-500/25 blur-[120px] animate-glow-pulse" style={{ animationDelay: "3s" }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,hsl(168_94%_72%/0.18),transparent_36%),linear-gradient(180deg,hsl(180_12%_5%),hsl(210_14%_4%))]" />
+        <div className="absolute inset-0 circuit-bg opacity-45" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
       </div>
 
       <Navbar />
@@ -55,12 +54,10 @@ function Navbar() {
     <header className="sticky top-0 z-50 px-4 pt-5">
       <motion.div
         initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="mx-auto max-w-6xl flex items-center justify-between rounded-full glass px-4 py-2.5"
+        className="mx-auto max-w-4xl flex items-center justify-between rounded-full orbit-nav px-4 py-2.5"
       >
         <Link to="/" className="flex items-center gap-2.5 px-2">
-          <div className="relative h-8 w-8 rounded-full bg-gradient-aurora flex items-center justify-center shadow-glow">
-            <Sparkles className="h-4 w-4 text-white" />
-          </div>
+          <BrandMark className="h-8 w-8 rounded-lg" />
           <span className="font-display font-bold tracking-tight text-lg">ORBIT</span>
         </Link>
 
@@ -72,15 +69,15 @@ function Navbar() {
             { l: "Login", h: "/login", route: true },
           ].map((i) =>
             i.route ? (
-              <Link key={i.l} to={i.h} className="px-3.5 py-1.5 rounded-full hover:text-foreground hover:bg-white/5 transition-colors">{i.l}</Link>
+              <Link key={i.l} to={i.h} className="px-3.5 py-1.5 rounded-full hover:text-foreground hover:bg-primary/10 transition-colors">{i.l}</Link>
             ) : (
-              <a key={i.l} href={i.h} className="px-3.5 py-1.5 rounded-full hover:text-foreground hover:bg-white/5 transition-colors">{i.l}</a>
+              <a key={i.l} href={i.h} className="px-3.5 py-1.5 rounded-full hover:text-foreground hover:bg-primary/10 transition-colors">{i.l}</a>
             )
           )}
         </nav>
 
         <Link to="/signup">
-          <Button className="rounded-full h-9 px-5 bg-white text-black hover:bg-white/90 font-medium">
+          <Button className="rounded-full h-9 px-5 bg-primary text-black hover:bg-primary/90 font-medium shadow-sm">
             Get Started
           </Button>
         </Link>
@@ -92,11 +89,13 @@ function Navbar() {
 /* ---------------- Hero ---------------- */
 function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: string) => void; onSubmit: (e: React.FormEvent) => void }) {
   return (
-    <section className="relative pt-20 pb-24 px-6">
-      <div className="max-w-5xl mx-auto text-center">
+    <section className="relative min-h-[calc(100vh-5rem)] px-6 pt-16 pb-20 overflow-hidden">
+      <OrbitalDecor />
+
+      <div className="relative z-10 max-w-5xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 glass-pill rounded-full px-4 py-1.5 text-xs text-muted-foreground mb-8"
+          className="inline-flex items-center gap-2 orbit-pill rounded-full px-4 py-1.5 text-xs text-primary mb-8"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-accent animate-glow-pulse" />
           New · Real-time team collaboration is here
@@ -106,7 +105,7 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
         <motion.h1
           initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
-          className="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]"
+          className="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.05] text-balance"
         >
           <span className="gradient-text">Manage Projects, Teams,</span>
           <br />
@@ -115,7 +114,7 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
 
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
-          className="text-lg text-muted-foreground mt-7 max-w-2xl mx-auto"
+          className="text-base md:text-lg text-muted-foreground mt-7 max-w-2xl mx-auto leading-7"
         >
           Create projects, assign tasks, track progress, and keep your team aligned with a beautifully organized, futuristic dashboard.
         </motion.p>
@@ -123,14 +122,14 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
         <motion.form
           onSubmit={onSubmit}
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
-          className="mt-10 max-w-md mx-auto flex items-center gap-2 glass rounded-full p-1.5 pl-5"
+          className="mt-10 max-w-md mx-auto flex items-center gap-2 orbit-input rounded-full p-1.5 pl-5"
         >
           <Input
             value={email} onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your work email"
             className="border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm h-10 px-0 placeholder:text-muted-foreground/70"
           />
-          <Button type="submit" className="rounded-full h-10 px-5 bg-white text-black hover:bg-white/90 font-medium shrink-0">
+          <Button type="submit" className="rounded-full h-10 px-5 bg-primary text-black hover:bg-primary/90 font-medium shrink-0 shadow-sm">
             Get Early Access
           </Button>
         </motion.form>
@@ -144,9 +143,50 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
         </motion.div>
       </div>
 
-      {/* Floating preview cards */}
-      <FloatingCards />
     </section>
+  );
+}
+
+function OrbitalDecor() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: -90, scale: 0.94 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 1.1, ease: [0.32, 0.72, 0, 1] }}
+        className="absolute left-1/2 top-[-30rem] h-[38rem] w-[62rem] -translate-x-1/2 rounded-[50%] border border-primary/35 bg-[radial-gradient(ellipse_at_center,hsl(168_94%_72%/0.38),hsl(168_94%_72%/0.08)_42%,transparent_68%)] blur-[0.2px] orbit-arc-top"
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 80, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 1.2, delay: 0.12, ease: [0.32, 0.72, 0, 1] }}
+        className="absolute left-1/2 top-[20rem] h-[34rem] w-[58rem] -translate-x-1/2 rounded-[50%] border border-primary/30 bg-[radial-gradient(ellipse_at_top,hsl(168_94%_72%/0.46),hsl(180_80%_38%/0.18)_38%,transparent_64%)] orbit-arc-bottom"
+      />
+      <div className="absolute left-[11%] top-24 hidden h-56 w-px bg-gradient-to-b from-transparent via-primary/25 to-transparent md:block" />
+      <div className="absolute right-[11%] top-32 hidden h-64 w-px bg-gradient-to-b from-transparent via-primary/25 to-transparent md:block" />
+      <div className="absolute left-[8%] top-36 hidden h-14 w-14 bg-white/[0.04] border border-white/5 md:block" />
+      <div className="absolute right-[8%] top-36 hidden h-14 w-14 bg-white/[0.04] border border-white/5 md:block" />
+      <motion.div
+        animate={{ y: [0, -10, 0], rotate: [0, 12, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-[13%] top-72 hidden h-12 w-12 items-center justify-center rounded-xl border border-primary/20 bg-white/[0.04] text-primary shadow-glow md:flex"
+      >
+        <Sparkles className="h-5 w-5" />
+      </motion.div>
+      <motion.div
+        animate={{ y: [0, 12, 0], rotate: [0, -12, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute right-[15%] top-28 hidden h-12 w-12 items-center justify-center rounded-xl border border-primary/20 bg-white/[0.04] text-primary shadow-glow md:flex"
+      >
+        <Star className="h-5 w-5" />
+      </motion.div>
+      <motion.div
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{ scaleX: 1, opacity: 1 }}
+        transition={{ duration: 0.9, delay: 0.35 }}
+        className="absolute left-1/2 top-[12.5rem] h-px w-[70%] max-w-[760px] origin-center -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/35 to-transparent"
+      />
+    </div>
   );
 }
 
@@ -494,9 +534,7 @@ function Footer() {
     <footer className="px-6 pb-12 pt-8 border-t border-white/5">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
-          <div className="h-7 w-7 rounded-full bg-gradient-aurora flex items-center justify-center shadow-glow">
-            <Sparkles className="h-3.5 w-3.5 text-white" />
-          </div>
+          <BrandMark className="h-7 w-7 rounded-lg" />
           <span className="font-display font-bold tracking-tight">ORBIT</span>
           <span className="text-xs text-muted-foreground ml-2">© 2026 Orbit Labs · Built for productive teams</span>
         </div>

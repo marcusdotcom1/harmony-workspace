@@ -165,7 +165,7 @@ export function TaskModal({ open, onOpenChange, projectId, task, defaultStatus =
           </div>
           <div className="flex gap-2 justify-end">
             <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={onSave} className="bg-gradient-aurora text-white border-0 hover:opacity-90">
+            <Button onClick={onSave} className="bg-primary text-black border-0 hover:bg-primary/90 shadow-none">
               {isEdit ? "Save changes" : "Create task"}
             </Button>
           </div>

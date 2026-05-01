@@ -43,7 +43,7 @@ export default function Settings() {
               <div className="space-y-1.5"><Label>Name</Label><Input value={name} onChange={(e) => setName(e.target.value)} className="rounded-xl" /></div>
               <div className="space-y-1.5"><Label>Email</Label><Input value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-xl" /></div>
             </div>
-            <Button className="bg-gradient-aurora text-white border-0 hover:opacity-90 rounded-xl" onClick={() => toast.success("Profile updated")}>Save changes</Button>
+            <Button className="bg-primary text-black border-0 hover:bg-primary/90 rounded-xl shadow-sm" onClick={() => toast.success("Profile updated")}>Save changes</Button>
           </div>
         </TabsContent>
 

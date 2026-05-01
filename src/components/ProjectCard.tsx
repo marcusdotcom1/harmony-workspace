@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Calendar, MoreHorizontal } from "lucide-react";
 import { Project, Task, User } from "@/types";
@@ -18,23 +17,17 @@ export function ProjectCard({ project, members, tasks, index = 0 }: {
   const isOverdue = due < new Date() && project.status !== "completed";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, duration: 0.35 }}
-      whileHover={{ y: -4 }}
-      className="group"
-    >
+    <div className="group">
       <Link to={`/projects/${project.id}`}>
-        <div className="relative overflow-hidden rounded-2xl glass p-5 glow-hover transition-all duration-300">
-          <div className={`absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-15 blur-2xl bg-gradient-to-br ${project.color}`} />
+        <div className="relative overflow-hidden rounded-xl border border-border/70 bg-card p-5 shadow-card glow-hover transition-all duration-200">
           <div className="relative">
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${project.color} flex items-center justify-center text-xl shadow-md shrink-0`}>
-                  {project.emoji}
+                <div className="h-10 w-10 shrink-0 rounded-lg border border-border bg-muted flex items-center justify-center text-sm font-semibold text-foreground">
+                  {project.name.slice(0, 1).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-semibold truncate group-hover:text-primary transition-colors">{project.name}</h3>
+                  <h3 className="font-semibold truncate transition-colors">{project.name}</h3>
                   <div className="flex items-center gap-1.5 mt-1">
                     <StatusBadge status={project.status} kind="project" />
                     <PriorityBadge priority={project.priority} />
@@ -63,6 +56,6 @@ export function ProjectCard({ project, members, tasks, index = 0 }: {
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

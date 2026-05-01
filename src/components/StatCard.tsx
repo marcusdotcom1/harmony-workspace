@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -10,24 +9,18 @@ export function StatCard({
   index?: number;
 }) {
   const accents: Record<string, string> = {
-    primary: "from-violet-500 to-fuchsia-500",
-    success: "from-emerald-500 to-teal-500",
-    warning: "from-amber-500 to-orange-500",
-    destructive: "from-rose-500 to-pink-500",
-    accent: "from-sky-500 to-cyan-500",
+    primary: "text-primary bg-primary/10 border-primary/20",
+    success: "text-success bg-success/10 border-success/20",
+    warning: "text-warning bg-warning/10 border-warning/20",
+    destructive: "text-destructive bg-destructive/10 border-destructive/20",
+    accent: "text-primary bg-primary/10 border-primary/20",
   };
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-      whileHover={{ y: -3 }}
-      className="group relative overflow-hidden rounded-2xl glass p-5 glow-hover"
-    >
-      <div className={cn("absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-25 blur-2xl bg-gradient-to-br", accents[accent])} />
+    <div className="group relative overflow-hidden rounded-xl border border-border/70 bg-card p-5 shadow-card glow-hover">
       <div className="relative flex items-start justify-between">
         <div>
           <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{label}</div>
-          <div className="mt-2 text-3xl font-display font-bold tracking-tight">{value}</div>
+          <div className="mt-2 text-3xl font-semibold tracking-tight">{value}</div>
           {delta && (
             <div className={cn("mt-2 inline-flex items-center gap-1 text-xs font-medium", delta.positive ? "text-success" : "text-destructive")}>
               {delta.positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
@@ -35,10 +28,10 @@ export function StatCard({
             </div>
           )}
         </div>
-        <div className={cn("h-11 w-11 rounded-xl flex items-center justify-center bg-gradient-to-br text-white shadow-md", accents[accent])}>
+        <div className={cn("h-10 w-10 rounded-lg border flex items-center justify-center", accents[accent])}>
           <Icon className="h-5 w-5" />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -5,7 +5,7 @@ export function ProgressBar({ value, className, gradient = true }: { value: numb
   return (
     <div className={cn("h-1.5 w-full rounded-full bg-muted overflow-hidden", className)}>
       <div
-        className={cn("h-full rounded-full transition-all duration-700", gradient ? "bg-gradient-to-r from-primary to-primary-glow" : "bg-primary")}
+        className={cn("h-full rounded-full transition-all duration-700", gradient ? "bg-primary" : "bg-primary")}
         style={{ width: `${v}%` }}
       />
     </div>
@@ -29,7 +29,7 @@ export function ProgressRing({ value, size = 64, stroke = 6 }: { value: number; 
         <defs>
           <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="hsl(var(--primary))" />
-            <stop offset="100%" stopColor="hsl(var(--primary-glow))" />
+            <stop offset="100%" stopColor="hsl(var(--primary))" />
           </linearGradient>
         </defs>
       </svg>

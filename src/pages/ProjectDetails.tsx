@@ -65,7 +65,7 @@ export default function ProjectDetails() {
         <div className={`absolute -right-10 -top-10 h-48 w-48 rounded-full opacity-20 blur-3xl bg-gradient-to-br ${project.color}`} />
         <div className="relative flex flex-col md:flex-row md:items-start md:justify-between gap-6">
           <div className="flex items-start gap-4 min-w-0">
-            <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${project.color} flex items-center justify-center text-3xl shadow-glow shrink-0`}>{project.emoji}</div>
+            <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${project.color} flex items-center justify-center text-3xl shadow-sm shrink-0`}>{project.emoji}</div>
             <div className="min-w-0">
               <h1 className="font-display text-2xl md:text-3xl font-bold">{project.name}</h1>
               <p className="text-muted-foreground mt-1.5 max-w-2xl">{project.description}</p>
@@ -129,7 +129,7 @@ export default function ProjectDetails() {
               </button>
             </div>
             {isAdmin && (
-              <Button onClick={() => openNewTask()} className="bg-gradient-aurora text-white border-0 hover:opacity-90 rounded-xl">
+              <Button onClick={() => openNewTask()} className="bg-primary text-black border-0 hover:bg-primary/90 rounded-xl shadow-sm">
                 <Plus className="h-4 w-4 mr-1" /> Task
               </Button>
             )}

@@ -2,11 +2,11 @@ import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BarChart3, Calendar, FolderKanban, LayoutDashboard, ListChecks,
-  Settings, Users, ChevronLeft, Sparkles
+  Settings, Users, ChevronLeft
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { useApp } from "@/store/AppContext";
+import { BrandMark } from "@/components/BrandMark";
 
 const items = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -39,9 +39,7 @@ export function Sidebar({ collapsed, setCollapsed, mobile, onClose }: {
       {/* Brand */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
         <NavLink to="/dashboard" className="flex items-center gap-2.5 min-w-0" onClick={onClose}>
-          <div className="h-9 w-9 rounded-full bg-gradient-aurora flex items-center justify-center shadow-glow shrink-0">
-            <Sparkles className="h-4 w-4 text-white" />
-          </div>
+          <BrandMark className="h-9 w-9" />
           {(!collapsed || mobile) && (
             <div className="min-w-0">
               <div className="font-display font-bold text-base leading-none tracking-tight">ORBIT</div>
@@ -50,9 +48,9 @@ export function Sidebar({ collapsed, setCollapsed, mobile, onClose }: {
           )}
         </NavLink>
         {!mobile && (
-          <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-white/5" onClick={() => setCollapsed(!collapsed)}>
+          <button className="h-7 w-7 rounded-md hover:bg-white/5 inline-flex items-center justify-center" onClick={() => setCollapsed(!collapsed)}>
             <ChevronLeft className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")} />
-          </Button>
+          </button>
         )}
       </div>
 
@@ -66,19 +64,12 @@ export function Sidebar({ collapsed, setCollapsed, mobile, onClose }: {
               <NavLink
                 key={item.to} to={item.to} onClick={onClose}
                 className={cn(
-                  "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                  "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-200",
                   active
-                    ? "text-sidebar-primary-foreground"
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
                     : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >
-                {active && (
-                  <motion.div
-                    layoutId="active-nav"
-                    className="absolute inset-0 rounded-xl bg-gradient-aurora shadow-glow"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
                 <item.icon className={cn("h-[18px] w-[18px] shrink-0 relative z-10")} />
                 {(!collapsed || mobile) && <span className="relative z-10">{item.label}</span>}
               </NavLink>
@@ -86,22 +77,6 @@ export function Sidebar({ collapsed, setCollapsed, mobile, onClose }: {
           })}
         </div>
       </nav>
-
-      {/* Upgrade card */}
-      {(!collapsed || mobile) && (
-        <div className="p-3">
-          <div className="relative overflow-hidden rounded-2xl p-4 bg-gradient-aurora text-white shadow-glow">
-            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-white/20 blur-2xl" />
-            <div className="relative">
-              <div className="text-sm font-semibold mb-1">Upgrade to Pro</div>
-              <p className="text-xs text-white/85 mb-3">Unlimited projects, advanced reports & priority support.</p>
-              <Button size="sm" className="h-7 text-xs bg-white text-black hover:bg-white/90 border-0 rounded-full px-3">
-                Upgrade
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </motion.aside>
   );
 }

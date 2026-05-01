@@ -20,7 +20,7 @@ export function EmptyState({
       </div>
       <h3 className="text-lg font-semibold mb-1">{title}</h3>
       <p className="text-sm text-muted-foreground max-w-sm mb-5">{description}</p>
-      {actionLabel && onAction && <Button onClick={onAction} className="bg-gradient-aurora hover:opacity-90 text-white border-0">{actionLabel}</Button>}
+      {actionLabel && onAction && <Button onClick={onAction} className="bg-primary hover:bg-primary/90 text-black border-0 shadow-none">{actionLabel}</Button>}
     </motion.div>
   );
 }
