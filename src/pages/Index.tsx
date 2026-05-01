@@ -91,10 +91,17 @@ export default function Index() {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden bg-background text-foreground">
+      <IntroCurtain />
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 mesh-bg opacity-90" />
-        <div className="absolute inset-0 circuit-bg opacity-40" />
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 0.9 }} transition={{ delay: 1.0, duration: 1.2 }}
+          className="absolute inset-0 mesh-bg"
+        />
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 0.4 }} transition={{ delay: 1.2, duration: 1.2 }}
+          className="absolute inset-0 circuit-bg"
+        />
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 h-[680px] w-[1100px] rounded-full bg-primary/30 blur-[140px] animate-glow-pulse" />
         <div className="absolute top-[20%] right-[-10%] h-[420px] w-[420px] rounded-full bg-accent/30 blur-[120px] animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
         <div className="absolute top-[60%] left-[-10%] h-[420px] w-[420px] rounded-full bg-fuchsia-500/25 blur-[120px] animate-glow-pulse" style={{ animationDelay: "3s" }} />
@@ -118,7 +125,9 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-50 px-4 pt-5">
       <motion.div
-        initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, y: -20, filter: "blur(8px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.7, delay: 1.1, ease: EASE }}
         className="mx-auto max-w-6xl flex items-center justify-between rounded-full glass px-4 py-2.5"
       >
         <Link to="/" className="flex items-center gap-2.5 px-2">
@@ -159,7 +168,9 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
     <section className="relative pt-20 pb-24 px-6">
       <div className="max-w-5xl mx-auto text-center">
         <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 16, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: 1.2, ease: EASE }}
           className="inline-flex items-center gap-2 glass-pill rounded-full px-4 py-1.5 text-xs text-muted-foreground mb-8"
         >
           <span className="h-1.5 w-1.5 rounded-full bg-accent animate-glow-pulse" />
@@ -167,18 +178,16 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
           <ArrowRight className="h-3 w-3" />
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
-          className="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]"
-        >
-          <span className="gradient-text">Manage Projects, Teams,</span>
+        <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.05]">
+          <RevealWords text="Manage Projects, Teams," gradient />
           <br />
-          <span className="gradient-text">and Tasks in One Workspace</span>
-        </motion.h1>
+          <RevealWords text="and Tasks in One Workspace" gradient />
+        </h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
+          initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.7, delay: 1.9, ease: EASE }}
           className="text-lg text-muted-foreground mt-7 max-w-2xl mx-auto"
         >
           Create projects, assign tasks, track progress, and keep your team aligned with a beautifully organized, futuristic dashboard.
@@ -186,7 +195,9 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
 
         <motion.form
           onSubmit={onSubmit}
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.7, delay: 2.1, ease: EASE }}
           className="mt-10 max-w-md mx-auto flex items-center gap-2 glass rounded-full p-1.5 pl-5"
         >
           <Input
@@ -200,7 +211,7 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
         </motion.form>
 
         <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.4, duration: 0.6 }}
           className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground"
         >
           <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-success" /> Free 14-day trial</span>
