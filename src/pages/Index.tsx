@@ -231,7 +231,7 @@ function FloatingCards() {
       {/* Active Projects card (left) */}
       <motion.div
         initial={{ opacity: 0, y: 40, rotate: -6 }} animate={{ opacity: 1, y: 0, rotate: -6 }}
-        transition={{ delay: 0.4, duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
+        transition={{ delay: 2.3, duration: 0.9, ease: EASE }}
         className="absolute left-0 md:left-4 top-10 w-[260px] glass-strong rounded-3xl p-5 shadow-glow animate-float-slow"
       >
         <div className="text-xs text-muted-foreground">Active Projects</div>
@@ -249,7 +249,7 @@ function FloatingCards() {
       {/* Big Project Progress card (center) */}
       <motion.div
         initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55, duration: 0.9, ease: [0.32, 0.72, 0, 1] }}
+        transition={{ delay: 2.45, duration: 1.0, ease: EASE }}
         className="absolute left-1/2 -translate-x-1/2 top-0 w-[340px] md:w-[440px] glass-strong rounded-3xl p-6 shadow-glow gradient-border"
       >
         <div className="flex items-center justify-between mb-3">
@@ -279,7 +279,7 @@ function FloatingCards() {
       {/* Assigned Tasks (right top) */}
       <motion.div
         initial={{ opacity: 0, y: 40, rotate: 5 }} animate={{ opacity: 1, y: 0, rotate: 5 }}
-        transition={{ delay: 0.7, duration: 0.8 }}
+        transition={{ delay: 2.6, duration: 0.9, ease: EASE }}
         className="absolute right-0 md:right-6 top-6 w-[280px] glass-strong rounded-3xl p-5 shadow-glow animate-float-slow" style={{ animationDelay: "1.2s" }}
       >
         <div className="flex items-center justify-between mb-3">
@@ -306,7 +306,7 @@ function FloatingCards() {
       {/* Recent activity (bottom right) */}
       <motion.div
         initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.85, duration: 0.8 }}
+        transition={{ delay: 2.75, duration: 0.9, ease: EASE }}
         className="absolute right-4 md:right-24 bottom-0 w-[280px] glass-strong rounded-3xl p-5 shadow-warm hidden md:block"
       >
         <div className="flex items-center justify-between mb-3">
@@ -332,7 +332,7 @@ function FloatingCards() {
       {/* Overdue tasks chip (bottom left) */}
       <motion.div
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.0, duration: 0.7 }}
+        transition={{ delay: 2.9, duration: 0.8, ease: EASE }}
         className="absolute left-8 md:left-32 bottom-10 glass-strong rounded-2xl px-4 py-3 shadow-warm hidden md:flex items-center gap-3"
       >
         <div className="h-9 w-9 rounded-xl bg-gradient-warm flex items-center justify-center">
