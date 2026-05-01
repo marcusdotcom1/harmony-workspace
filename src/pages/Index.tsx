@@ -1,21 +1,85 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   ArrowRight, Sparkles, LayoutDashboard, ListChecks, Users, BarChart3,
   Calendar, Shield, Zap, CheckCircle2, Star, FolderKanban, Activity, Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { BrandMark } from "@/components/BrandMark";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: [0.32, 0.72, 0, 1] as const },
+  transition: { duration: 0.6, ease: EASE },
 };
+
+/* Word-by-word reveal */
+const wordContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.9 } },
+};
+const wordItem: Variants = {
+  hidden: { opacity: 0, y: 28, filter: "blur(12px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: EASE } },
+};
+
+function RevealWords({ text, className, gradient }: { text: string; className?: string; gradient?: boolean }) {
+  return (
+    <motion.span variants={wordContainer} initial="hidden" animate="show" className={className}>
+      {text.split(" ").map((w, i) => (
+        <span key={i} className="inline-block overflow-hidden align-bottom pb-1">
+          <motion.span variants={wordItem} className={`inline-block ${gradient ? "gradient-text" : ""}`}>
+            {w}&nbsp;
+          </motion.span>
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
+/* Curtain that lifts on first paint */
+function IntroCurtain() {
+  const [gone, setGone] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setGone(true), 1100);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <AnimatePresence>
+      {!gone && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.6, ease: EASE } }}
+          className="fixed inset-0 z-[100] pointer-events-none"
+        >
+          <motion.div
+            initial={{ y: 0 }}
+            animate={{ y: "-100%" }}
+            transition={{ delay: 0.55, duration: 0.9, ease: EASE }}
+            className="absolute inset-0 bg-background"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 1, 1.4] }}
+            transition={{ duration: 1.1, times: [0, 0.25, 0.7, 1], ease: EASE }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-gradient-aurora shadow-glow animate-glow-pulse" />
+              <span className="font-display font-bold tracking-tight text-2xl gradient-text">ORBIT</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default function Index() {
   const [email, setEmail] = useState("");
@@ -28,6 +92,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen relative overflow-x-hidden bg-background text-foreground">
+      <IntroCurtain />
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,hsl(168_94%_72%/0.18),transparent_36%),linear-gradient(180deg,hsl(180_12%_5%),hsl(210_14%_4%))]" />
@@ -109,8 +174,8 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
         >
           <span className="gradient-text">Manage Projects, Teams,</span>
           <br />
-          <span className="gradient-text">and Tasks in One Workspace</span>
-        </motion.h1>
+          <RevealWords text="and Tasks in One Workspace" gradient />
+        </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}
@@ -135,7 +200,7 @@ function Hero({ email, setEmail, onSubmit }: { email: string; setEmail: (s: stri
         </motion.form>
 
         <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }}
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.4, duration: 0.6 }}
           className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground"
         >
           <span className="flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-success" /> Free 14-day trial</span>
@@ -196,7 +261,7 @@ function FloatingCards() {
       {/* Active Projects card (left) */}
       <motion.div
         initial={{ opacity: 0, y: 40, rotate: -6 }} animate={{ opacity: 1, y: 0, rotate: -6 }}
-        transition={{ delay: 0.4, duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
+        transition={{ delay: 2.3, duration: 0.9, ease: EASE }}
         className="absolute left-0 md:left-4 top-10 w-[260px] glass-strong rounded-3xl p-5 shadow-glow animate-float-slow"
       >
         <div className="text-xs text-muted-foreground">Active Projects</div>
@@ -214,7 +279,7 @@ function FloatingCards() {
       {/* Big Project Progress card (center) */}
       <motion.div
         initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55, duration: 0.9, ease: [0.32, 0.72, 0, 1] }}
+        transition={{ delay: 2.45, duration: 1.0, ease: EASE }}
         className="absolute left-1/2 -translate-x-1/2 top-0 w-[340px] md:w-[440px] glass-strong rounded-3xl p-6 shadow-glow gradient-border"
       >
         <div className="flex items-center justify-between mb-3">
@@ -244,7 +309,7 @@ function FloatingCards() {
       {/* Assigned Tasks (right top) */}
       <motion.div
         initial={{ opacity: 0, y: 40, rotate: 5 }} animate={{ opacity: 1, y: 0, rotate: 5 }}
-        transition={{ delay: 0.7, duration: 0.8 }}
+        transition={{ delay: 2.6, duration: 0.9, ease: EASE }}
         className="absolute right-0 md:right-6 top-6 w-[280px] glass-strong rounded-3xl p-5 shadow-glow animate-float-slow" style={{ animationDelay: "1.2s" }}
       >
         <div className="flex items-center justify-between mb-3">
@@ -271,7 +336,7 @@ function FloatingCards() {
       {/* Recent activity (bottom right) */}
       <motion.div
         initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.85, duration: 0.8 }}
+        transition={{ delay: 2.75, duration: 0.9, ease: EASE }}
         className="absolute right-4 md:right-24 bottom-0 w-[280px] glass-strong rounded-3xl p-5 shadow-warm hidden md:block"
       >
         <div className="flex items-center justify-between mb-3">
@@ -297,7 +362,7 @@ function FloatingCards() {
       {/* Overdue tasks chip (bottom left) */}
       <motion.div
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.0, duration: 0.7 }}
+        transition={{ delay: 2.9, duration: 0.8, ease: EASE }}
         className="absolute left-8 md:left-32 bottom-10 glass-strong rounded-2xl px-4 py-3 shadow-warm hidden md:flex items-center gap-3"
       >
         <div className="h-9 w-9 rounded-xl bg-gradient-warm flex items-center justify-center">
