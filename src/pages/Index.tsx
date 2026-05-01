@@ -1,20 +1,84 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import {
   ArrowRight, Sparkles, LayoutDashboard, ListChecks, Users, BarChart3,
   Calendar, Shield, Zap, CheckCircle2, Star, FolderKanban, Activity, Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: [0.32, 0.72, 0, 1] as const },
+  transition: { duration: 0.6, ease: EASE },
 };
+
+/* Word-by-word reveal */
+const wordContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.9 } },
+};
+const wordItem: Variants = {
+  hidden: { opacity: 0, y: 28, filter: "blur(12px)" },
+  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: EASE } },
+};
+
+function RevealWords({ text, className, gradient }: { text: string; className?: string; gradient?: boolean }) {
+  return (
+    <motion.span variants={wordContainer} initial="hidden" animate="show" className={className}>
+      {text.split(" ").map((w, i) => (
+        <span key={i} className="inline-block overflow-hidden align-bottom pb-1">
+          <motion.span variants={wordItem} className={`inline-block ${gradient ? "gradient-text" : ""}`}>
+            {w}&nbsp;
+          </motion.span>
+        </span>
+      ))}
+    </motion.span>
+  );
+}
+
+/* Curtain that lifts on first paint */
+function IntroCurtain() {
+  const [gone, setGone] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setGone(true), 1100);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <AnimatePresence>
+      {!gone && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.6, ease: EASE } }}
+          className="fixed inset-0 z-[100] pointer-events-none"
+        >
+          <motion.div
+            initial={{ y: 0 }}
+            animate={{ y: "-100%" }}
+            transition={{ delay: 0.55, duration: 0.9, ease: EASE }}
+            className="absolute inset-0 bg-background"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 1, 1.4] }}
+            transition={{ duration: 1.1, times: [0, 0.25, 0.7, 1], ease: EASE }}
+            className="absolute inset-0 flex items-center justify-center"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-gradient-aurora shadow-glow animate-glow-pulse" />
+              <span className="font-display font-bold tracking-tight text-2xl gradient-text">ORBIT</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default function Index() {
   const [email, setEmail] = useState("");
